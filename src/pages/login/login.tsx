@@ -15,6 +15,7 @@ import {
 import { message, Space, Tabs } from 'antd';
 import type { CSSProperties } from 'react';
 import { useState } from 'react';
+import { useRequest } from 'umi';
 import styles from './login.less';
 
 type LoginType = 'phone' | 'account';
@@ -28,6 +29,12 @@ const iconStyles: CSSProperties = {
 
 const Login: React.FC = () => {
   const [loginType, setLoginType] = useState<LoginType>('account');
+
+  const {data, error, loading} = useRequest('/api/user', {})
+
+  console.log({data, error, loading});
+  
+
   return (
     <div className={styles.container}>
     <div className={styles.content}>
