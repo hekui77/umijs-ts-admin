@@ -1,5 +1,5 @@
 import { RequestConfig } from 'umi';
-import { getToken } from '@/utils/auth';
+import { getSessionStorageToken, getLocalStorageToken } from '@/utils/auth';
 import { history } from 'umi';
 
 // 请求配置
@@ -21,7 +21,7 @@ export const request: RequestConfig = {
       options: {
         ...options,
         headers: {
-          authorization: 'Bearer ' + getToken()
+          authorization: 'Bearer ' + (getSessionStorageToken() || getLocalStorageToken())
         }
       }
     })
@@ -30,9 +30,10 @@ export const request: RequestConfig = {
 };
 
 // 覆写 render 渲染之前登录校验
-export function render(oldRender: () => void) {  
-  if (getToken()) { oldRender() }
-  else { 
+export function render(oldRender: () => void) {    
+  if (!!(getSessionStorageToken() || getLocalStorageToken())) {
+    oldRender() 
+  } else {
     history.push('/login'); 
     oldRender()
   }

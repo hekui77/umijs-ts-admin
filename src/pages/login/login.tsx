@@ -17,7 +17,13 @@ import type { CSSProperties } from 'react';
 import { useState } from 'react';
 import { useRequest } from 'umi';
 import styles from './login.less';
-import { removeToken, setToken } from '@/utils/auth';
+import { 
+  removeSessionStorageToken, 
+  setSessionStorageToken, 
+  removeLocalStorageToken,
+  setLocalStorageToken
+} from '@/utils/auth';
+import { history } from 'umi';
 
 type LoginType = 'phone' | 'account';
 const iconStyles: CSSProperties = {
@@ -45,10 +51,13 @@ const Login: React.FC = () => {
       password: data.password
     })
     if (data.autoLogin) {
-      setToken(res.token)
+      setLocalStorageToken(res.token)
+      removeSessionStorageToken()
     } else {
-      removeToken()
+      setSessionStorageToken(res.token)
+      removeLocalStorageToken()
     }
+    history.push('/')
   }
 
   
@@ -60,6 +69,7 @@ const Login: React.FC = () => {
         logo="https://github.githubassets.com/images/modules/logos_page/Octocat.png"
         title="Github"
         subTitle="全球最大的代码托管平台"
+        
         actions={
           <Space>
             其他登录方式
@@ -68,7 +78,9 @@ const Login: React.FC = () => {
             <WeiboCircleOutlined className={styles.icon} />
           </Space>
         }
-        onFinish={handleSubmit}
+        onFinish={async (values) => {
+          await handleSubmit(values)
+        }}
       >
         <Tabs
           centered
