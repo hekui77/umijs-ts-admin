@@ -1,6 +1,5 @@
 
 export default [
-  { path: '/', component: '@/pages/index' },
   { 
     path: '/login',
     component: '@/pages/login/login',
@@ -12,5 +11,12 @@ export default [
     menuRender: false,
     // 不展示菜单顶栏
     menuHeaderRender: false,
+  },
+  { path: '/', component: '@/pages/index' },
+  { 
+    name: '用户管理',
+    routes: [
+      { name: '用户列表', path: '/userManage/userManage', component: '@/pages/userManage/userManage' }
+    ]
   },
 ]
