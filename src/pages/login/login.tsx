@@ -30,9 +30,21 @@ const iconStyles: CSSProperties = {
 const Login: React.FC = () => {
   const [loginType, setLoginType] = useState<LoginType>('account');
 
-  const {data, error, loading} = useRequest('/api/user', {})
+  const {run: loginApi} = useRequest(data => ({
+    url: '/api/user/login',
+    method: 'post',
+    data
+  }),{
+    manual: true
+  })
 
-  console.log({data, error, loading});
+  const handleSubmit = async (data: any) => {
+    await loginApi({
+      phone: data.username,
+      password: data.password
+    })
+  }
+
   
 
   return (
@@ -50,6 +62,7 @@ const Login: React.FC = () => {
             <WeiboCircleOutlined className={styles.icon} />
           </Space>
         }
+        onFinish={handleSubmit}
       >
         <Tabs
           centered
