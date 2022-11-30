@@ -17,6 +17,7 @@ import type { CSSProperties } from 'react';
 import { useState } from 'react';
 import { useRequest } from 'umi';
 import styles from './login.less';
+import { removeToken, setToken } from '@/utils/auth';
 
 type LoginType = 'phone' | 'account';
 const iconStyles: CSSProperties = {
@@ -39,10 +40,15 @@ const Login: React.FC = () => {
   })
 
   const handleSubmit = async (data: any) => {
-    await loginApi({
+    const res = await loginApi({
       phone: data.username,
       password: data.password
     })
+    if (data.autoLogin) {
+      setToken(res.token)
+    } else {
+      removeToken()
+    }
   }
 
   
@@ -69,8 +75,8 @@ const Login: React.FC = () => {
           activeKey={loginType}
           onChange={(activeKey) => setLoginType(activeKey as LoginType)}
         >
-          <Tabs.TabPane key={'account'} tab={'账号密码登录'} />
-          <Tabs.TabPane key={'phone'} tab={'手机号登录'} />
+          {/* <Tabs.TabPane key={'account'} tab={'账号密码登录'} /> */}
+          {/* <Tabs.TabPane key={'phone'} tab={'手机号登录'} /> */}
         </Tabs>
         {loginType === 'account' && (
           <>
