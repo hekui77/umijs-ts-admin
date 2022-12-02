@@ -70,5 +70,6 @@ export default function UserManage() {
     url: '/api/user',
   }))
 
+  
   return <Table columns={columns} dataSource={data} loading={loading} rowKey={ (record) => record.id } />
 }
