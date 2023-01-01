@@ -13,7 +13,7 @@ on:
 env:
   ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }} # 服务器私钥
   SERVER_HOST: ${{ secrets.SERVER_HOST }} # 服务器IP地址
-  USER_NAME: ${{ secrets.USER_NAME }} # 服务器用户名
+  USER_NAME: ${{ secrets.USER_NAME }} # 服务器用户名 
   cache-name: note
 
 # jobs表示执行的一项或多项任务
