@@ -18,13 +18,13 @@ env:
 
 # jobs表示执行的一项或多项任务
 jobs:
-  build: # 任务的job_id，具体名称自定义，这里build代表打包
+  build:
     runs-on: ubuntu-latest # runs-on字段指定运行所需要的虚拟机环境。注意：这个是必填字段
     steps:
     - uses: actions/checkout@master
     - uses: actions/setup-node@v1
     with:
-      node-version: v14.17.0
+      node-version: v16.0.0
 
     #缓存依赖
     - name: Cache nodemodules
