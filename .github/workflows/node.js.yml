@@ -20,43 +20,43 @@ env:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest # runs-on字段指定运行所需要的虚拟机环境。注意：这个是必填字段
-    steps:
-      - uses: actions/checkout@master
-      - uses: actions/setup-node@v1
-      with:
-        node-version: '16.x'
-
-      #缓存依赖
-      - name: Cache nodemodules
-        uses: actions/cache@v1
-        env:
-          cache-name: cache-node-modules
+      steps:
+        - uses: actions/checkout@master
+        - uses: actions/setup-node@v1
         with:
-          # 需要缓存的文件的路径
-          path: ./node_modules 
-          # 对缓存的文件指定的唯一标识
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('./package.json') }} 
-          # 用于没有再找目标key的缓存的backup选项
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
+          node-version: '16.x'
 
-      # 装依赖
-      - name: Install
-        run: yarn
+        #缓存依赖
+        - name: Cache nodemodules
+          uses: actions/cache@v1
+          env:
+            cache-name: cache-node-modules
+          with:
+            # 需要缓存的文件的路径
+            path: ./node_modules 
+            # 对缓存的文件指定的唯一标识
+            key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('./package.json') }} 
+            # 用于没有再找目标key的缓存的backup选项
+            restore-keys: |
+              ${{ runner.os }}-build-${{ env.cache-name }}-
+              ${{ runner.os }}-build-
+              ${{ runner.os }}-
 
-      # 打包
-      - name: Build
-        run: yarn build
+        # 装依赖
+        - name: Install
+          run: yarn
 
-      # 上传打包资源
-      - name: Deploy
-        uses: easingthemes/ssh-deploy@v2.0.7
-        env:
-          SSH_PRIVATE_KEY: ${{ env.SERVER_PRIVATE_KEY }}
-          ARGS: '-avz --delete'
-          SOURCE: 'dist/'
-          REMOTE_HOST: ${{ env.SERVER_HOST }}
-          REMOTE_USER: ${{ env.USER_NAME }}
-          TARGET: /www/wwwroot/admin.icexue.top # 服务器目标路径
+        # 打包
+        - name: Build
+          run: yarn build
+
+        # 上传打包资源
+        - name: Deploy
+          uses: easingthemes/ssh-deploy@v2.0.7
+          env:
+            SSH_PRIVATE_KEY: ${{ env.SERVER_PRIVATE_KEY }}
+            ARGS: '-avz --delete'
+            SOURCE: 'dist/'
+            REMOTE_HOST: ${{ env.SERVER_HOST }}
+            REMOTE_USER: ${{ env.USER_NAME }}
+            TARGET: /www/wwwroot/admin.icexue.top # 服务器目标路径
