@@ -59,4 +59,5 @@ jobs:
         SOURCE: 'dist/'
         REMOTE_HOST: ${{ env.SERVER_HOST }}
         REMOTE_USER: ${{ env.USER_NAME }}
+        SSH_PRIVATE_KEY: ${{secrets.ACCESS_TOKEN}} # github access token
         TARGET: /www/wwwroot/admin.icexue.top # 服务器目标路径
