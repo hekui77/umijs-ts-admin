@@ -52,11 +52,10 @@ jobs:
 
     # 上传打包资源
     - name: Deploy
-      uses: easingthemes/ssh-deploy@v2.0.7
+      uses: cross-the-world/ssh-scp-ssh-pipelines@latest
       env:
-        SSH_PRIVATE_KEY: ${{ env.ACCESS_TOKEN }}
-        ARGS: '-avz --delete'
-        SOURCE: 'dist/'
-        REMOTE_HOST: ${{ env.SERVER_HOST }}
-        REMOTE_USER: ${{ env.USER_NAME }}
-        TARGET: /www/wwwroot/admin.icexue.top # 服务器目标路径
+        key: ${{ env.ACCESS_TOKEN }}
+        host: ${{ env.SERVER_HOST }}
+        user: ${{ env.USER_NAME }}
+        scp: |
+          './dist/*' => /www/wwwroot/admin.icexue.top/
