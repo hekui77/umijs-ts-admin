@@ -53,7 +53,7 @@ jobs:
     # 上传打包资源
     - name: Deploy
       uses: cross-the-world/ssh-scp-ssh-pipelines@latest
-      env:
+      with:
         key: ${{ env.ACCESS_TOKEN }}
         host: ${{ env.SERVER_HOST }}
         user: ${{ env.USER_NAME }}
