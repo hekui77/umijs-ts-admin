@@ -68,7 +68,7 @@ const Login: React.FC = () => {
       <LoginForm
         logo="https://github.githubassets.com/images/modules/logos_page/Octocat.png"
         title="Github"
-        subTitle="全球最大的代码托管平台"
+        subTitle="全球最大的代码托管平台-1"
         
         actions={
           <Space>
