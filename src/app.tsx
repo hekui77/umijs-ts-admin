@@ -12,6 +12,8 @@ export const request: RequestConfig = {
       success: data.status === 200,
       errorCode: data.status,
       errorMessage: data.msg,
+      showType: data.status === 401 ? 9 : 2,
+      errorPage: '/login'
     })
   },
   middlewares: [],
@@ -30,7 +32,7 @@ export const request: RequestConfig = {
 };
 
 // 覆写 render 渲染之前登录校验
-export function render(oldRender: () => void) {    
+export function render(oldRender: () => void) {
   if (!!(getSessionStorageToken() || getLocalStorageToken())) {
     oldRender() 
   } else {
