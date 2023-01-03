@@ -23,6 +23,7 @@ import {
   setLocalStorageToken,
 } from '@/utils/auth';
 import { history, useRequest } from 'umi';
+import 'antd/es/form/style/index.less';
 
 type LoginType = 'phone' | 'account';
 const iconStyles: CSSProperties = {
