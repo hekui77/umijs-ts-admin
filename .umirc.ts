@@ -8,4 +8,5 @@ export default defineConfig({
   layout: {},
   routes,
   fastRefresh: {},
+  exportStatic: {},
 });
