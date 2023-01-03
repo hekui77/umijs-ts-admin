@@ -7,13 +7,13 @@ export const request: RequestConfig = {
   prefix: 'http://116.62.64.16:7003',
   timeout: 3000,
   errorConfig: {
+    errorPage: '/login',
     adaptor: data => ({
       ...data,
       success: data.status === 200,
       errorCode: data.status,
       errorMessage: data.msg,
       showType: data.status === 401 ? 9 : 2,
-      errorPage: '/login'
     })
   },
   middlewares: [],
