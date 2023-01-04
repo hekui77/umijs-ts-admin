@@ -63,13 +63,17 @@ const Login: React.FC = () => {
     history.push('/');
   };
 
+  const handleRegister = () => {
+    history.push('/register');
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.content}>
         <LoginForm
           logo="https://github.githubassets.com/images/modules/logos_page/Octocat.png"
           title="Github"
-          subTitle="全球最大的代码托管平台-1"
+          subTitle="全球最大的代码托管平台"
           actions={
             <Space>
               其他登录方式
@@ -174,7 +178,9 @@ const Login: React.FC = () => {
             <ProFormCheckbox noStyle name="autoLogin">
               自动登录
             </ProFormCheckbox>
-            <a style={{ float: 'right' }}>忘记密码</a>
+            <a style={{ float: 'right' }} onClick={handleRegister}>
+              立即注册
+            </a>
           </div>
         </LoginForm>
       </div>
