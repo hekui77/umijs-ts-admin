@@ -1,7 +1,7 @@
 import styles from '../login/login.less';
 import './register.less';
 import { Form, Input, Button } from 'antd';
-import { useRequest } from 'umi';
+import { history, useRequest } from 'umi';
 
 const Register: React.FC = () => {
   const [form] = Form.useForm();
@@ -13,10 +13,12 @@ const Register: React.FC = () => {
     }),
     { manual: true },
   );
-  const onFinish = (values: any) => {
+  const onFinish = async (values: any) => {
     const data = { ...values };
     delete data.passwordAgain;
-    registerApi(data);
+    const res = await registerApi(data);
+    console.log(res);
+    history.push('/login');
   };
 
   return (
