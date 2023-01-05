@@ -1,11 +1,22 @@
 import styles from '../login/login.less';
 import './register.less';
 import { Form, Input, Button } from 'antd';
+import { useRequest } from 'umi';
 
 const Register: React.FC = () => {
   const [form] = Form.useForm();
+  const { run: registerApi, loading: registerLoading } = useRequest(
+    (data) => ({
+      url: '/api/user/register',
+      method: 'post',
+      data,
+    }),
+    { manual: true },
+  );
   const onFinish = (values: any) => {
-    console.log(values);
+    const data = { ...values };
+    delete data.passwordAgain;
+    registerApi(data);
   };
 
   return (
@@ -25,11 +36,54 @@ const Register: React.FC = () => {
         </div>
         <div style={{ width: '328px', margin: '0 auto' }}>
           <Form form={form} onFinish={onFinish}>
-            <Form.Item name="username">
-              <Input placeholder="用户名" />
+            <Form.Item
+              name="username"
+              rules={[{ required: true, message: '请输入手机号' }]}
+            >
+              <Input placeholder="手机号" />
+            </Form.Item>
+            <Form.Item name="email">
+              <Input placeholder="邮箱" />
+            </Form.Item>
+            <Form.Item name="nickname">
+              <Input placeholder="昵称" />
+            </Form.Item>
+            <Form.Item
+              name="password"
+              rules={[{ required: true, message: '请输入密码' }]}
+              hasFeedback
+            >
+              <Input.Password placeholder="密码" />
+            </Form.Item>
+            <Form.Item
+              name="passwordAgain"
+              dependencies={['password']}
+              hasFeedback
+              rules={[
+                {
+                  required: true,
+                  message: '请再次输入密码',
+                },
+                ({ getFieldValue }) => ({
+                  validator(_, value) {
+                    if (!value || getFieldValue('password') === value) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(new Error('密码不一致'));
+                  },
+                }),
+              ]}
+            >
+              <Input.Password placeholder="密码" />
             </Form.Item>
             <Form.Item>
-              <Button type="primary" htmlType="submit" size="large" block>
+              <Button
+                type="primary"
+                htmlType="submit"
+                size="large"
+                block
+                loading={registerLoading}
+              >
                 注册
               </Button>
             </Form.Item>
