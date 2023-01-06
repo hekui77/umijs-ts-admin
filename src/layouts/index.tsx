@@ -1,4 +1,4 @@
-import { Breadcrumb, Layout, Menu, theme } from 'antd';
+import { Breadcrumb, Layout } from 'antd';
 import { useState } from 'react';
 const { Header, Content, Footer, Sider } = Layout;
 import type { MenuProps } from 'antd';
@@ -9,6 +9,8 @@ import {
   TeamOutlined,
   UserOutlined,
 } from '@ant-design/icons';
+import MenuComponents from './MenuComponents';
+import HeaderComponents from './HeaderComponents';
 
 type MenuItem = Required<MenuProps>['items'][number];
 function getItem(
@@ -40,9 +42,8 @@ const items: MenuItem[] = [
 ];
 
 export default (props: any) => {
-  // return <div style={{ padding: 20 }}>{ props.children }</div>;
-
   const [collapsed, setCollapsed] = useState<boolean>(false);
+
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Sider
@@ -57,15 +58,10 @@ export default (props: any) => {
             background: 'rgba(255, 255, 255, 0.2)',
           }}
         />
-        <Menu
-          theme="dark"
-          defaultSelectedKeys={['1']}
-          mode="inline"
-          items={items}
-        />
+        <MenuComponents routes={props.routes} />
       </Sider>
       <Layout className="site-layout">
-        <Header style={{ padding: 0 }} />
+        <HeaderComponents />
         <Content style={{ margin: 16, background: '#fff' }}>
           <div style={{ padding: 16 }}>{props.children}</div>
         </Content>
