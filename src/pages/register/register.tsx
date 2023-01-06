@@ -1,10 +1,20 @@
 import styles from '../login/login.less';
 import './register.less';
-import { Form, Input, Button } from 'antd';
+import { Form, Input, Button, Checkbox } from 'antd';
 import { history, useRequest } from 'umi';
+import {
+  UserOutlined,
+  PhoneOutlined,
+  LockOutlined,
+  GlobalOutlined,
+} from '@ant-design/icons';
+import type { CheckboxChangeEvent } from 'antd/es/checkbox';
+import { useState } from 'react';
+import { setSessionStorageToken, removeLocalStorageToken } from '@/utils/auth';
 
 const Register: React.FC = () => {
   const [form] = Form.useForm();
+  const [isLogin, setIsLogin] = useState<boolean>(false);
   const { run: registerApi, loading: registerLoading } = useRequest(
     (data) => ({
       url: '/api/user/register',
@@ -13,11 +23,45 @@ const Register: React.FC = () => {
     }),
     { manual: true },
   );
+
+  const { run: loginApi } = useRequest(
+    (data) => ({
+      url: '/api/user/login',
+      method: 'post',
+      data,
+    }),
+    {
+      manual: true,
+    },
+  );
+
+  const onLoginApi = async (data: any) => {
+    const res = await loginApi({
+      phone: data.phone,
+      password: data.password,
+    });
+    setSessionStorageToken(res.token);
+    removeLocalStorageToken();
+    history.push('/');
+  };
+
   const onFinish = async (values: any) => {
     const data = { ...values };
     delete data.passwordAgain;
-    const res = await registerApi(data);
-    console.log(res);
+    await registerApi(data);
+    if (isLogin) {
+      await onLoginApi(data);
+    } else {
+      history.push('/login');
+    }
+  };
+
+  // 立即登录
+  const onChangeCheckbox = (e: CheckboxChangeEvent) => {
+    setIsLogin(e.target.checked);
+  };
+
+  const handleLogin = () => {
     history.push('/login');
   };
 
@@ -39,23 +83,39 @@ const Register: React.FC = () => {
         <div style={{ width: '328px', margin: '0 auto' }}>
           <Form form={form} onFinish={onFinish}>
             <Form.Item
-              name="username"
+              name="phone"
               rules={[{ required: true, message: '请输入手机号' }]}
             >
-              <Input placeholder="手机号" />
+              <Input
+                prefix={<PhoneOutlined />}
+                size="large"
+                placeholder="手机号"
+              />
             </Form.Item>
             <Form.Item name="email">
-              <Input placeholder="邮箱" />
+              <Input
+                prefix={<GlobalOutlined />}
+                size="large"
+                placeholder="邮箱"
+              />
             </Form.Item>
             <Form.Item name="nickname">
-              <Input placeholder="昵称" />
+              <Input
+                prefix={<UserOutlined />}
+                size="large"
+                placeholder="昵称"
+              />
             </Form.Item>
             <Form.Item
               name="password"
               rules={[{ required: true, message: '请输入密码' }]}
               hasFeedback
             >
-              <Input.Password placeholder="密码" />
+              <Input.Password
+                prefix={<LockOutlined />}
+                size="large"
+                placeholder="密码"
+              />
             </Form.Item>
             <Form.Item
               name="passwordAgain"
@@ -76,8 +136,20 @@ const Register: React.FC = () => {
                 }),
               ]}
             >
-              <Input.Password placeholder="密码" />
+              <Input.Password
+                prefix={<LockOutlined />}
+                size="large"
+                placeholder="密码"
+              />
             </Form.Item>
+            <div style={{ marginBottom: '24px' }}>
+              <Checkbox onChange={onChangeCheckbox} checked={isLogin}>
+                立即登录
+              </Checkbox>
+              <a style={{ float: 'right' }} onClick={handleLogin}>
+                返回登录
+              </a>
+            </div>
             <Form.Item>
               <Button
                 type="primary"
