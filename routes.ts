@@ -13,23 +13,18 @@ export default [
     path: '/',
     component: '@/layouts/index',
     routes: [
-      { path: '/', component: '@/pages/index', hideInMenu: true },
+      { path: '/', redirect: '/home', hideInMenu: true },
+      { path: '/home', component: '@/pages/index', hideInMenu: true },
       {
-        path: '/userManage/userManage',
-        component: '@/pages/userManage/userManage',
         title: '用户管理',
-        // icon: 'Study',
+        routes: [
+          {
+            title: '用户列表',
+            path: '/userManage/userManage',
+            component: '@/pages/userManage/userManage',
+          },
+        ],
       },
-      // {
-      //   name: '用户管理',
-      //   routes: [
-      //     {
-      //       name: '用户列表',
-      //       path: '/userManage/userManage',
-      //       component: '@/pages/userManage/userManage',
-      //     },
-      //   ],
-      // },
     ],
   },
 ];

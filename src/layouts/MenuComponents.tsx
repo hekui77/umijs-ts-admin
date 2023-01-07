@@ -1,53 +1,57 @@
 import { Menu } from 'antd';
 import type { MenuProps } from 'antd';
-import {
-  DesktopOutlined,
-  FileOutlined,
-  PieChartOutlined,
-  TeamOutlined,
-  UserOutlined,
-} from '@ant-design/icons';
-import { IRoute } from 'umi';
+import { history, IRoute, useLocation } from 'umi';
+import pathRegexp from 'path-to-regexp';
+
 interface MenuRouteProps {
   routes?: IRoute[];
 }
 
-type MenuItem = Required<MenuProps>['items'][number];
-function getItem(
-  label: React.ReactNode,
-  key: React.Key,
-  icon?: React.ReactNode,
-  children?: MenuItem[],
-): MenuItem {
-  return {
-    key,
-    icon,
-    children,
-    label,
-  } as MenuItem;
-}
-const items: MenuItem[] = [
-  getItem('Option 1', '1', <PieChartOutlined />),
-  getItem('Option 2', '2', <DesktopOutlined />),
-  getItem('User', 'sub1', <UserOutlined />, [
-    getItem('Tom', '3'),
-    getItem('Bill', '4'),
-    getItem('Alex', '5'),
-  ]),
-  getItem('Team', 'sub2', <TeamOutlined />, [
-    getItem('Team 1', '6'),
-    getItem('Team 2', '8'),
-  ]),
-  getItem('Files', '9', <FileOutlined />),
-];
+const MenuComponents: React.FC<MenuRouteProps> = ({ routes }) => {
+  const { pathname } = useLocation();
 
-const MenuComponents: React.FC<MenuRouteProps> = () => {
+  const mapRoutes = (routes: any) => {
+    return routes?.map((item: IRoute) => {
+      if (!item.hideInMenu) {
+        return {
+          key: item.path,
+          icon: item.icon,
+          label: item.title,
+          children: item.routes?.length ? mapRoutes(item.routes) : undefined,
+        };
+      }
+    });
+  };
+  const handleCliclMenuItem: MenuProps['onClick'] = (e) => {
+    history.push(e.key);
+  };
+
+  const menuList =
+    routes?.filter((r) => {
+      if (r.exact) {
+        return routes.find(
+          ({ path }) => path && pathRegexp(path).exec(pathname),
+        );
+      }
+      return routes.find(({ path }) => {
+        return (
+          path &&
+          path
+            .split('/')
+            .some((item, index) =>
+              pathRegexp(item).exec(pathname.split('/')[index]),
+            )
+        );
+      });
+    }) ?? [];
+
   return (
     <Menu
       theme="dark"
-      defaultSelectedKeys={['1']}
+      defaultSelectedKeys={[pathname]}
       mode="inline"
-      items={items}
+      items={mapRoutes(menuList[0].routes)}
+      onClick={handleCliclMenuItem}
     />
   );
 };
