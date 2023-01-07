@@ -28,9 +28,13 @@ const HeaderComponents = () => {
     removeSessionStorageToken();
     window.location.reload();
   };
+  const handlePersonInfor = () => {
+    history.push('/userManage/personInfor');
+  };
+
   const items: MenuProps['items'] = [
     {
-      label: <div>个人信息</div>,
+      label: <div onClick={handlePersonInfor}>个人信息</div>,
       key: '0',
     },
     {

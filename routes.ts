@@ -23,6 +23,11 @@ export default [
             path: '/userManage/userManage',
             component: '@/pages/userManage/userManage',
           },
+          {
+            path: '/userManage/personInfor',
+            component: '@/pages/userManage/personInfor/personInfor',
+            hideInMenu: true,
+          },
         ],
       },
     ],
